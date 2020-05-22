@@ -27,7 +27,8 @@ namespace CandyMarket.DataAccess
 		                        on users.userId = usercandies.userid
 	                        join candies
 		                        on candies.candyid = usercandies.candyid
-                        where usercandies.userid = @userId;
+                        where usercandies.userid = @userId
+                        and userCandies.isConsumed = 0;
                       ";
 
 
