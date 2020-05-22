@@ -40,15 +40,20 @@ namespace CandyMarket.Controllers
         [HttpPost("{userId}/addNewCandy")]
         public IActionResult AddNewCandy(int userId, Candy candyToAdd)
         {
-            var existingCandy = _repository.GetByCandyName(candyToAdd.CandyName);
-            if (existingCandy == null)
+            var user = _repository.GetUserById(userId);
+            if (user != null)
             {
-                var newCandy = _repository.Add(userId, candyToAdd);
-                _repository.Update(userId, newCandy.CandyId);
-                return Created("", newCandy);
+                var existingCandy = _repository.GetByCandyName(candyToAdd.CandyName);
+                if (existingCandy == null)
+                {
+                    var newCandy = _repository.Add(userId, candyToAdd);
+                    _repository.Update(userId, newCandy.CandyId);
+                    return Created("", newCandy);
+                }
+                _repository.Update(userId, existingCandy.CandyId);
+                return Ok(candyToAdd);
             }
-            _repository.Update(userId, existingCandy.CandyId);
-            return Ok(candyToAdd);
+            return NotFound("That user does not exist.");
 
         }
     }
