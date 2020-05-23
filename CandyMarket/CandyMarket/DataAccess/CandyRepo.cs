@@ -72,7 +72,23 @@ namespace CandyMarket.DataAccess
                 return existingCandy;
             }
         }
-        
+
+        public Candy GetCandyById(int candyId)
+        {
+            var sql = @"
+                        select *
+                        from candies
+                        where candyId = @CandyId;
+                      ";
+
+            using (var db = new SqlConnection(connectionString))
+            {
+                var parameters = new { CandyId = candyId };
+                var existingCandy = db.QueryFirstOrDefault<Candy>(sql, parameters);
+                return existingCandy;
+            }
+        }
+
         //Add: Add a new candy to the candy table, and add a new entry to user candies table
         public Candy Add(int userId, Candy candyToAdd)
         {

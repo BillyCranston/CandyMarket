@@ -61,6 +61,16 @@ namespace CandyMarket.Controllers
         [HttpDelete("eatCandy/{candyId}/user/{userId}")]
         public IActionResult ConsumeChosenCandy(int candyId, int userId)
         {
+            var userExists = _repository.GetUserById(userId);
+            if (userExists == null)
+            {
+                return NotFound("This user does not exist");
+            }
+            var candyExists = _repository.GetCandyById(candyId);
+            if (candyExists == null)
+            {
+                return NotFound("This candy does not exist");
+            }
             var candyConsumed = _repository.ConsumeSpecificCandy(candyId, userId);
             if (candyConsumed == null)
             {
