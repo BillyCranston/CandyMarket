@@ -25,9 +25,9 @@ namespace CandyMarket.Controllers
         [HttpGet("{userid}")]
         public IActionResult GetConsumedCandyByUserId(int userid)
         {
-            var candy = _repository.GetById(userid);
+            var candy = _repository.GetByUserId(userid);
 
-            if (candy == null) return NotFound("This user has zero candy.");
+            if (candy == null) return NotFound("This user hasn't consumed any candy.");
 
             return Ok(candy);
         }
