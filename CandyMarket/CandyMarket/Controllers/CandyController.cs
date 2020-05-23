@@ -18,5 +18,17 @@ namespace CandyMarket.Controllers
         {
             _repository = repository;
         }
+
+        // api/Candy/eatCandy/2/user/3
+        [HttpDelete("eatCandy/{candyId}/user/{userId}")]
+        public IActionResult ConsumeChosenCandy(int candyId, int userId)
+        {
+            var candyConsumed = _repository.ConsumeSpecificCandy(candyId, userId);
+            if (candyConsumed == null)
+            {
+                return NotFound("This candy could not be found for the specified user");
+            }
+            return Ok(candyConsumed);
+        }
     }
 }
