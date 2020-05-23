@@ -12,12 +12,5 @@ namespace CandyMarket.Models
         public string Manufacturer { get; set; }
         public string FlavorCategory { get; set; }
 
-        public Candy(string candyName, string manufacturer, string flavorCategory)
-        {
-            CandyName = candyName;
-            Manufacturer = manufacturer;
-            FlavorCategory = flavorCategory;
-
-        }
     }
 }
