@@ -20,19 +20,6 @@ namespace CandyMarket.Controllers
             _repository = repository;
         }
 
-
-        // api/candy/{userid}
-        // api/candy/5
-        [HttpGet("{userid}")]
-        public IActionResult GetConsumedCandyByUserId(int userid)
-        {
-            var candy = _repository.GetByUserId(userid);
-
-            if (candy == null) return NotFound("This user hasn't consumed any candy.");
-
-            return Ok(candy);
-        }
-
         // api/Candy/{userId}
         [HttpGet("{userId}")]
         public IActionResult GetCandiesByUserId(int userId)
@@ -69,6 +56,18 @@ namespace CandyMarket.Controllers
             }
             return NotFound("That user does not exist.");
 
+        }
+
+        // api/candy/{userid}/consumedCandy
+        // api/candy/5/consumedCandy
+        [HttpGet("{userid}/consumedCandy")]
+        public IActionResult GetConsumedCandyByUserId(int userid)
+        {
+            var candy = _repository.GetByUserId(userid);
+
+            if (candy == null) return NotFound("This user hasn't consumed any candy.");
+
+            return Ok(candy);
         }
     }
 }
