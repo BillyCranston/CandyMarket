@@ -19,18 +19,6 @@ namespace CandyMarket.Controllers
             _repository = repository;
         }
 
-<<<<<<< HEAD
-        // api/Candy/eatCandy/2/user/3
-        [HttpDelete("eatCandy/{candyId}/user/{userId}")]
-        public IActionResult ConsumeChosenCandy(int candyId, int userId)
-        {
-            var candyConsumed = _repository.ConsumeSpecificCandy(candyId, userId);
-            if (candyConsumed == null)
-            {
-                return NotFound("This candy could not be found for the specified user");
-            }
-            return Ok(candyConsumed);
-=======
         // api/Candy/{userId}
         [HttpGet("{userId}")]
         public IActionResult GetCandiesByUserId(int userId)
@@ -45,7 +33,19 @@ namespace CandyMarket.Controllers
                 return Ok(candies);
             }
             else return NotFound("That user does not exist.");
->>>>>>> master
         }
+
+        // api/Candy/eatCandy/2/user/3
+        [HttpDelete("eatCandy/{candyId}/user/{userId}")]
+        public IActionResult ConsumeChosenCandy(int candyId, int userId)
+        {
+            var candyConsumed = _repository.ConsumeSpecificCandy(candyId, userId);
+            if (candyConsumed == null)
+            {
+                return NotFound("This candy could not be found for the specified user");
+            }
+            return Ok(candyConsumed);
+        }
+
     }
 }
