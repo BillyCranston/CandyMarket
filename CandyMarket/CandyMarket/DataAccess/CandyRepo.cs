@@ -3,13 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-<<<<<<< HEAD
-using Dapper;
-=======
 using CandyMarket.Models;
 using Dapper;
 using System.Data.SqlClient;
->>>>>>> e009ec2c0bb891fde60502bdd4c8b2194c10af6f
 
 namespace CandyMarket.DataAccess
 {
@@ -22,32 +18,25 @@ namespace CandyMarket.DataAccess
             connectionString = config.GetConnectionString("CandyMarket");
         }
 
-<<<<<<< HEAD
-        static List<Candy> _candy = new List<Candy>()
-        {
-            new Candy()
-            {
-                CandyName = "Snickers",
-                Manufacturer = "Mars, Inc.",
-                FlavorCategory = "Chocolate",
-            };
-
         public List<Candy> GetAll()
         {
-            // Dappper
+            // Dapper
             using (var db = new SqlConnection(connectionString))
             {
                 return db.Query<Candy>("select * from candy").ToList();
             }
+        }
 
-            public GetById(int id)
+        public Candy GetById(int id)
         {
             using (var db = new SqlConnection(connectionString))
             {
                 var idQuery = @"";
                 var candy = db.QueryFirstOrDefault<Candy>(idQuery, new { Id = id });
                 return candy;
-=======
+            }
+        }
+
         public IEnumerable<Candy> GetByUserId(int userId)
         {
             var sql = @"
@@ -83,7 +72,6 @@ namespace CandyMarket.DataAccess
                 var parameters = new { UserId = userId };
                 var user = db.QueryFirstOrDefault<User>(sql, parameters);
                 return user;
->>>>>>> e009ec2c0bb891fde60502bdd4c8b2194c10af6f
             }
         }
     }
