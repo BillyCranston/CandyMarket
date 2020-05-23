@@ -80,16 +80,18 @@ namespace CandyMarket.Controllers
             return Ok(candyConsumed);
         }
 
-        // api/candy/{userid}/consumedCandy
-        // api/candy/5/consumedCandy
-        [HttpGet("{userid}/consumedCandy")]
-        public IActionResult GetConsumedCandyByUserId(int userid)
+        // api/candy/{userId}/consumedCandy
+        // api/candy/4/consumedCandy
+        [HttpGet("{userId}/consumedCandy")]
+        public IActionResult GetConsumedCandyByUserId(int userId)
         {
-            var candy = _repository.GetByUserId(userid);
+            var checkForUser = _repository.GetByUserId(userId);
+            if (checkForUser == null) return NotFound("This user doesn't exist.");
 
-            if (candy == null) return NotFound("This user hasn't consumed any candy.");
+            var candyConsumed = _repository.GetConsumedCandy(userId);
+            if (candyConsumed == null) return NotFound("This user hasn't consumed any candy");
 
-            return Ok(candy);
+            return Ok(candyConsumed);
         }
     }
 }
