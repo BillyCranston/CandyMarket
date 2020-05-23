@@ -57,7 +57,55 @@ namespace CandyMarket.DataAccess
             }
         }
 
-        public UserCandyView EatCandy(int userCandyId)
+        public Candy GetByCandyName(string candyName)
+        {
+            var sql = @"
+                        select *
+                        from candies
+                        where candyname = @CandyName;
+                      ";
+
+            using (var db = new SqlConnection(connectionString))
+            {
+                var parameters = new { CandyName = candyName };
+                var existingCandy = db.QueryFirstOrDefault<Candy>(sql, parameters);
+                return existingCandy;
+            }
+        }
+        
+        //Add: Add a new candy to the candy table, and add a new entry to user candies table
+        public Candy Add(int userId, Candy candyToAdd)
+        {
+            var sql = @"insert into Candies(CandyName, Manufacturer, FlavorCategory)
+                        output inserted.*
+                        values(@CandyName, @Manufacturer, @FlavorCategory);";
+
+            using (var db = new SqlConnection(connectionString))
+            {
+                var result = db.QueryFirstOrDefault<Candy>(sql, candyToAdd);
+                return result;
+            }
+        }
+
+        //Update: Updates the users candy inventory (create new usercandies entry for table)
+        public UserCandy Update(int userId, int candyId)
+        {
+            //DateTime dateTime = new DateTime();
+            DateTime dateTime = DateTime.Now;
+            var sql = @"insert into UserCandies(UserId, CandyId, DateReceived, IsConsumed)
+                        output inserted.*
+                        values(@UserId, @CandyId, @DateReceived, 0);";
+
+            using (var db = new SqlConnection(connectionString))
+            {
+                var parameters = new { UserId = userId, CandyId = candyId, DateReceived = dateTime };
+                var result = db.QueryFirstOrDefault<UserCandy>(sql, parameters);
+                return result;
+            }
+        }
+
+        // EatCandy: updates isConsumed on UserCandy to true
+        public UserCandyDetailed EatCandy(int userCandyId)
         {
             var sql = @"update UserCandies
                         set isConsumed = 1
@@ -71,12 +119,13 @@ namespace CandyMarket.DataAccess
             using (var db = new SqlConnection(connectionString))
             {
                 var parameters = new { UserCandyId = userCandyId };
-                var candyConsumed = db.QueryFirstOrDefault<UserCandyView>(sql, parameters);
+                var candyConsumed = db.QueryFirstOrDefault<UserCandyDetailed>(sql, parameters);
                 return candyConsumed;
             }
         }
 
-        public UserCandyView ConsumeSpecificCandy(int candyId, int userId)
+        // ConsumeSpecificCandy: finds UserCandyId for oldest piece of a specific candy and calls EatCandy
+        public UserCandyDetailed ConsumeSpecificCandy(int candyId, int userId)
         {
             var sql = @"select UserCandyId
                         from UserCandies

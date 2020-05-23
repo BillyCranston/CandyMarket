@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CandyMarket.Models
 {
-    public class UserCandyView
+    public class UserCandyDetailed
     {
         public int UserCandyId { get; set; }
         public int CandyId { get; set; }
