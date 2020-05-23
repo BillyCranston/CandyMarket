@@ -19,6 +19,25 @@ namespace CandyMarket.DataAccess
             connectionString = config.GetConnectionString("CandyMarket");
         }
 
+        public List<Candy> GetAll()
+        {
+            // Dapper
+            using (var db = new SqlConnection(connectionString))
+            {
+                return db.Query<Candy>("select * from candy").ToList();
+            }
+        }
+
+        public Candy GetById(int id)
+        {
+            using (var db = new SqlConnection(connectionString))
+            {
+                var idQuery = @"";
+                var candy = db.QueryFirstOrDefault<Candy>(idQuery, new { Id = id });
+                return candy;
+            }
+        }
+
         public IEnumerable<Candy> GetByUserId(int userId)
         {
             var sql = @"
@@ -162,5 +181,25 @@ namespace CandyMarket.DataAccess
             }
         }
 
+        public IEnumerable<UserCandyDetailed> GetConsumedCandy(int userId)
+        {
+            var sql = @"select UserCandies.*, CandyName, FlavorCategory
+                from UserCandies
+                join Candies on userCandies.candyId = Candies.CandyId
+                where isConsumed = 1
+                and userId = @UserId";
+
+            using (var db = new SqlConnection(connectionString))
+            {
+                var parameters = new
+                {
+                    UserId = userId
+                };
+                var CandyThatHasBeenConsumed = db.Query<UserCandyDetailed>(sql, parameters);
+                return CandyThatHasBeenConsumed;
+
+
+            }
+        }
     }
 }
