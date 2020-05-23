@@ -23,8 +23,6 @@ namespace CandyMarket.DataAccess
             var sql = @"
                         select candies.CandyId, candies.CandyName, Candies.Manufacturer, candies.FlavorCategory
                         from UserCandies
-	                        join Users
-		                        on users.userId = usercandies.userid
 	                        join candies
 		                        on candies.candyid = usercandies.candyid
                         where usercandies.userid = @userId
