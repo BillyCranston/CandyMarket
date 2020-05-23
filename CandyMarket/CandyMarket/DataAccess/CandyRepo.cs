@@ -57,22 +57,26 @@ namespace CandyMarket.DataAccess
             }
         }
 
-        public Candy EatCandy(int userCandyId)
+        public UserCandyView EatCandy(int userCandyId)
         {
             var sql = @"update UserCandies
                         set isConsumed = 1
-                        output Inserted.*
-                        where userCandyId = @UserCandyId";
+                        where userCandyId = @UserCandyId
+                        select uc.*, c.CandyName, c.FlavorCategory
+                        from UserCandies uc
+                            join Candies c
+                            on uc.CandyId = c.CandyId
+                        where uc.UserCandyId = @UserCandyId";
 
             using (var db = new SqlConnection(connectionString))
             {
                 var parameters = new { UserCandyId = userCandyId };
-                var candyConsumed = db.QueryFirstOrDefault<Candy>(sql, parameters);
+                var candyConsumed = db.QueryFirstOrDefault<UserCandyView>(sql, parameters);
                 return candyConsumed;
             }
         }
 
-        public Candy ConsumeSpecificCandy(int candyId, int userId)
+        public UserCandyView ConsumeSpecificCandy(int candyId, int userId)
         {
             var sql = @"select UserCandyId
                         from UserCandies
