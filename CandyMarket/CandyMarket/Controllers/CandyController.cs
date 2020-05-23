@@ -89,7 +89,8 @@ namespace CandyMarket.Controllers
             if (checkForUser == null) return NotFound("This user doesn't exist.");
 
             var candyConsumed = _repository.GetConsumedCandy(userId);
-            if (candyConsumed == null) return NotFound("This user hasn't consumed any candy");
+            var isEmpty = !candyConsumed.Any();
+            if (isEmpty) return NotFound("This user hasn't consumed any candy");
 
             return Ok(candyConsumed);
         }
