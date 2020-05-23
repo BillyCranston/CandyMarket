@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CandyMarket.DataAccess;
+using CandyMarket.Models;
 
 namespace CandyMarket.Controllers
 {
@@ -46,6 +47,27 @@ namespace CandyMarket.Controllers
                 return Ok(candies);
             }
             else return NotFound("That user does not exist.");
+
+        }
+
+        // api/Candy/{userId}
+        [HttpPost("{userId}/addNewCandy")]
+        public IActionResult AddNewCandy(int userId, Candy candyToAdd)
+        {
+            var user = _repository.GetUserById(userId);
+            if (user != null)
+            {
+                var existingCandy = _repository.GetByCandyName(candyToAdd.CandyName);
+                if (existingCandy == null)
+                {
+                    var newCandy = _repository.Add(userId, candyToAdd);
+                    _repository.Update(userId, newCandy.CandyId);
+                    return Created("", newCandy);
+                }
+                _repository.Update(userId, existingCandy.CandyId);
+                return Ok(candyToAdd);
+            }
+            return NotFound("That user does not exist.");
 
         }
     }
