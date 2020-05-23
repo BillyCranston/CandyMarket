@@ -18,5 +18,17 @@ namespace CandyMarket.Controllers
         {
             _repository = repository;
         }
+
+        // api/candy/{userid}
+        // api/candy/5
+        [HttpGet("{userid}")]
+        public IActionResult GetConsumedCandyByUserId(int userid)
+        {
+            var candy = _repository.GetById(userid);
+
+            if (candy == null) return NotFound("This user has zero candy.");
+
+            return Ok(candy);
+        }
     }
 }
