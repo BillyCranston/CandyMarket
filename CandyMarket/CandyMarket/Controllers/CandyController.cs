@@ -85,7 +85,7 @@ namespace CandyMarket.Controllers
         [HttpGet("{userId}/consumedCandy")]
         public IActionResult GetConsumedCandyByUserId(int userId)
         {
-            var checkForUser = _repository.GetByUserId(userId);
+            var checkForUser = _repository.GetUserById(userId);
             if (checkForUser == null) return NotFound("This user doesn't exist.");
 
             var candyConsumed = _repository.GetConsumedCandy(userId);
