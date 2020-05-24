@@ -198,14 +198,14 @@ namespace CandyMarket.DataAccess
         }
 
         // ConsumeRandomCandy: finds UserCandyId for oldest piece of a random candy by flavor and calls EatCandy
-        public UserCandyDetailed ConsumeRandomCandy(string flavor, int userId)
+        public UserCandyDetailed ConsumeRandomCandy(string flavorCategory, int userId)
         {
             var sql = @"select top 1 with ties UserCandyId
                         from UserCandies uc
                             join Candies c
                             on uc.candyId = c.candyId
                         where isConsumed = 0
-                        and flavorCategory = @Flavor
+                        and flavorCategory = @FlavorCategory
                         and userId = @UserId
                         order by dateReceived";
 
@@ -213,7 +213,7 @@ namespace CandyMarket.DataAccess
             {
                 var parameters = new
                 {
-                    Flavor = flavor,
+                    FlavorCategory = flavorCategory,
                     UserId = userId
                 };
                 var CandyOptions = db.Query<int>(sql, parameters);
