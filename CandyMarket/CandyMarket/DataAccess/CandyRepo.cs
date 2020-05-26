@@ -108,6 +108,22 @@ namespace CandyMarket.DataAccess
             }
         }
 
+        public Candy GetCandyByFlavor(string flavor)
+        {
+            var sql = @"
+                        select *
+                        from candies
+                        where flavorCategory = @Flavor;
+                      ";
+
+            using (var db = new SqlConnection(connectionString))
+            {
+                var parameters = new { Flavor = flavor };
+                var existingCandy = db.QueryFirstOrDefault<Candy>(sql, parameters);
+                return existingCandy;
+            }
+        }
+
         //Add: Add a new candy to the candy table, and add a new entry to user candies table
         public Candy Add(int userId, Candy candyToAdd)
         {
@@ -181,6 +197,33 @@ namespace CandyMarket.DataAccess
             }
         }
 
+        // ConsumeRandomCandy: finds UserCandyId for oldest piece of a random candy by flavor and calls EatCandy
+        public UserCandyDetailed ConsumeRandomCandy(string flavorCategory, int userId)
+        {
+            var sql = @"select top 1 with ties UserCandyId
+                        from UserCandies uc
+                            join Candies c
+                            on uc.candyId = c.candyId
+                        where isConsumed = 0
+                        and flavorCategory = @FlavorCategory
+                        and userId = @UserId
+                        order by CAST(dateReceived as date)";
+
+            using (var db = new SqlConnection(connectionString))
+            {
+                var parameters = new
+                {
+                    FlavorCategory = flavorCategory,
+                    UserId = userId
+                };
+                var CandyOptions = db.Query<int>(sql, parameters);
+                var RNG = new Random().Next(0, CandyOptions.Count());
+                var CandyToConsume = CandyOptions.ElementAtOrDefault(RNG);
+                var eatenCandy = EatCandy(CandyToConsume);
+                return eatenCandy;
+            }
+        }
+
         public IEnumerable<UserCandyDetailed> GetConsumedCandy(int userId)
         {
             var sql = @"select UserCandies.*, CandyName, FlavorCategory
@@ -197,8 +240,6 @@ namespace CandyMarket.DataAccess
                 };
                 var CandyThatHasBeenConsumed = db.Query<UserCandyDetailed>(sql, parameters);
                 return CandyThatHasBeenConsumed;
-
-
             }
         }
     }
