@@ -94,5 +94,23 @@ namespace CandyMarket.Controllers
 
             return Ok(candyConsumed);
         }
+
+        // api/candy/{receiverUserId}/trade/{giverUserId}/{candyId}
+        // api/candy/4/trade/2/3
+        [HttpPut("{receiverUserId}/trade/{giverUserId}/{candyId}")]
+        public IActionResult TradeCandy(int receiverUserId, int giverUserId, int candyId)
+        {
+            // calls the method to pull candy available for giver, and if not returns not found 
+            var candyToBeTraded = _repository.TradeCandy(candyId, giverUserId);
+            if (candyToBeTraded == null) return NotFound("Candy not found");
+
+            // calls the update method and pass receiver userid and candyid 
+            var updateUserCandy = _repository.Update(receiverUserId, candyId);
+
+            //call the getbyUserId method to list all the candies of the requestor
+            var userUpdateCandies = _repository.GetByUserId(receiverUserId);
+
+            return Ok(userUpdateCandies);
+        }
     }
 }

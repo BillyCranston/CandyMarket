@@ -197,8 +197,29 @@ namespace CandyMarket.DataAccess
                 };
                 var CandyThatHasBeenConsumed = db.Query<UserCandyDetailed>(sql, parameters);
                 return CandyThatHasBeenConsumed;
+            }
 
+        }
 
+        public Candy TradeCandy(int candyID, int UserID)
+        {
+            var sql = @"select Candies.*
+                        FROM Candies
+                        JOIN UserCandies ON Candies.CandyId = UserCandies.CandyId
+                        Where isConsumed = 0 
+                        AND Candies.CandyId = @candyID
+                        AND UserCandies.UserId = @UserID;";
+
+            using (var db = new SqlConnection(connectionString))
+            {
+                var parameters = new
+                {
+                    CandyId = candyID,
+                    UserId = UserID
+                };
+
+                var candyToBeTraded = db.QueryFirstOrDefault<Candy>(sql, parameters);
+                return candyToBeTraded;
             }
         }
     }
