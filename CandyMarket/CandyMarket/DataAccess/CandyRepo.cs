@@ -207,7 +207,7 @@ namespace CandyMarket.DataAccess
                         where isConsumed = 0
                         and flavorCategory = @FlavorCategory
                         and userId = @UserId
-                        order by dateReceived";
+                        order by CAST(dateReceived as date)";
 
             using (var db = new SqlConnection(connectionString))
             {
