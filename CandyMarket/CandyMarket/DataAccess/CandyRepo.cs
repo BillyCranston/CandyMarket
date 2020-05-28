@@ -268,7 +268,6 @@ namespace CandyMarket.DataAccess
         public bool UpdateTradedCandy(int receiverUserID, int userCandyIdToBeTraded)
         {
             // updates the usercandyid 
-            DateTime now = DateTime.Now;
             var sql = @"update UserCandies
                         set UserId = @receiverUserID
                         where UserCandyId = @candyToBeTraded
@@ -280,7 +279,6 @@ namespace CandyMarket.DataAccess
                 {
                     receiverUserID = receiverUserID,
                     candyToBeTraded = userCandyIdToBeTraded,
-                    DateReceived = now
                 };
                 var numberOfCandyEaten = db.Execute(sql, parameters);
                 return numberOfCandyEaten > 0;
