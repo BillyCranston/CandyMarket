@@ -38,10 +38,9 @@ namespace CandyMarket.DataAccess
             }
         }
 
-        public IEnumerable<Candy> GetByUserId(int userId)
+        public IEnumerable<UserCandyDetailed> GetByUserId(int userId)
         {
-            var sql = @"
-                        select candies.CandyId, candies.CandyName, Candies.Manufacturer, candies.FlavorCategory
+            var sql = @"select UserCandies.*, CandyName, FlavorCategory
                         from UserCandies
 	                        join candies
 		                        on candies.candyid = usercandies.candyid
@@ -54,7 +53,7 @@ namespace CandyMarket.DataAccess
             {
                 var parameters = new { UserId = userId };
 
-                var candies = db.Query<Candy>(sql, parameters);
+                var candies = db.Query<UserCandyDetailed>(sql, parameters);
 
                 return candies;
             }
